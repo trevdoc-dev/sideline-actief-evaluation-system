@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Evaluation Report{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Evaluation Report</h1>
+
+    <canvas id="evaluationChart" width="400" height="200"></canvas>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Dummy data for the chart (random values between 1 and 10)
+        const dummyData = {
+            labels: ["Communication Skills", "Subject Knowledge", "Approachability"],
+            datasets: [
+                {
+                    label: "Average Scores",
+                    data: [
+                        Math.floor(Math.random() * 10) + 1,
+                        Math.floor(Math.random() * 10) + 1,
+                        Math.floor(Math.random() * 10) + 1,
+                    ],
+                    backgroundColor: [
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                    ],
+                    borderColor: [
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                    ],
+                    borderWidth: 1,
+                },
+            ],
+        };
+
+        // Configure the chart
+        const config = {
+            type: "bar",
+            data: dummyData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "top",
+                    },
+                    title: {
+                        display: true,
+                        text: "Teacher Evaluation Results",
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                        },
+                    },
+                },
+            },
+        };
+
+        // Render the chart
+        const evaluationChart = new Chart(
+            document.getElementById("evaluationChart"),
+            config
+        );
+    </script>
+</div>
+{% endblock %}

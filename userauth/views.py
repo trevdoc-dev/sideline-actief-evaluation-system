@@ -24,6 +24,10 @@ def evaluation_page(request):
     users = User.objects.all()
     return render(request, "evaluation_page.html", {"evaluations": evaluations, "users": users})
 
+# ANALYTICS PAGE
+def analytics_page(request):
+    return render(request, "analytics_page.html")
+
 
 
 # LOGIN PAGE
