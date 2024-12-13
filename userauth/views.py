@@ -20,8 +20,9 @@ def user_page(request):
     
 # EVALUATION PAGE
 def evaluation_page(request):
-    evaluation = Question.objects.all()
-    return render(request, "evaluation_page.html", {"evaluation": evaluation})
+    evaluations = Question.objects.all()
+    users = User.objects.all()
+    return render(request, "evaluation_page.html", {"evaluations": evaluations, "users": users})
 
 
 
