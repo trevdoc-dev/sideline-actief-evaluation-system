@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from userauth.models import User
 
 
 # MAIN PAGE
@@ -14,7 +14,7 @@ def main_page(request):
 # HOME PAGE
 def home_page(request):
     users = User.objects.all()
-    return render(request, 'myapp/home_page.html', {'users': users})
+    return render(request, 'home_page.html', {'users': users})
 
 # LOGIN PAGE
 def login_page(request):

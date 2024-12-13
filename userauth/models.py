@@ -26,9 +26,4 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    full_name = models.CharField(max_length=100, null=True, blank=True)
-    role = models.CharField(max_length=50, null=True, blank=True)
     objects = CustomUserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []  # Any required fields for registration can be listed here
