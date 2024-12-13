@@ -4,6 +4,23 @@
     "start": "cmd /C \"env\\Scripts\\activate && python manage.py runserver\"",
     "migrate": "cmd /C \"env\\Scripts\\activate && python manage.py migrate\"",
     "migrations": "cmd /C \"env\\Scripts\\activate && python manage.py makemigrations\"",
-    "user": "cmd /C \"env\\Scripts\\activate && python manage.py createsuperuser\""
+    "user": "cmd /C \"env\\Scripts\\activate && python manage.py createsuperuser\"",
+    "format": "prettier --write \"**/*.{html,js}\""
+  },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "htmlWhitespaceSensitivity": "css",
+    "endOfLine": "lf"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   }
 }

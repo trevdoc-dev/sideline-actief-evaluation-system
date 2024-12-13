@@ -3,3 +3,4 @@ __pycache__/
 path/
 userauth/migrations/*
 !user/migrations/__init__.py
+node_modules/
