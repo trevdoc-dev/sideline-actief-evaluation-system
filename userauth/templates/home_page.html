@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>ACTIEF</title>
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f6fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            background-color: hwb(207 1% 51%);
+            color: white;
+            padding-top: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #a7aa08;
+            color: white;
+            border-color: #b9ee26;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .tab-button {
+            padding: 20px 30px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #0056b3;
+        }
+
+        .tab-button:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        #user-management-content {
+            margin-left: 260px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Hide content by default */
+        #user-management-content {
+            display: none;
+        }
+
+        /* FullCalendar styles */
+        #calendar {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+
+        /* Reports Chart styles */
+        #performance-chart {
+            width: 400%;
+            /* Adjust the width of the chart */
+            height: 600px;
+            /* Set a fixed height */
+            max-width: 600px;
+            /* Optionally, set a maximum width */
+            margin: 20px auto;
+            /* Center the chart */
+        }
+
+        /* Facebook Post Embed */
+        #home-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'image/logo2.png' %}" alt="Logo" width="150">
+        </div>
+        <ul>
+            <li class="menu-item">
+                <a href="javascript:void(0);" onclick="showHome()">
+                    <i class="icon-home"></i> Home
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" onclick="showUserManagement()">
+                    <i class="icon-book"></i> Users
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" onclick="showEvaluation()">
+                    <i class="icon-settings"></i> Evaluation
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" onclick="showReports()">
+                    <i class="icon-settings"></i> Reports
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#">
+                    <i class="icon-settings"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Home Content with Facebook Post -->
+    <div id="home-content" style="display:none;">
+        <h2>ACTIEF Senior High School Facebook Posts</h2>
+        <iframe src="https://www.facebook.com/ACTIEFSHS/posts/10154009990506729" frameborder="0"></iframe>
+    </div>
+
+    <!-- User Management Content -->
+    <div id="user-management-content">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('list', this)">List of Users</button>
+            <button class="tab-button" onclick="showTab('add', this)">Add New User</button>
+            <button class="tab-button" onclick="showTab('update', this)">Update User</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="list" class="tab-content" style="display:block;">
+            <h2>List of Users</h2>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="add" class="tab-content" style="display:none;">
+            <h2>Add New User</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Add User</button>
+            </form>
+        </div>
+
+        <div id="update" class="tab-content" style="display:none;">
+            <h2>Update User</h2>
+            <!-- Add your update functionality here -->
+        </div>
+    </div>
+
+    <!-- Evaluation Content -->
+    <div id="evaluation-content" style="display:none; margin-left: 260px; padding: 20px;">
+        <h2>Evaluation Calendar</h2>
+        <input type="date" id="evaluation-calendar" style="font-size:16px; padding: 10px;">
+    </div>
+
+    <!-- Reports Content with Performance Graph -->
+    <div id="reports-content" style="display:none; margin-left: 720px; padding: 50px;">
+        <h2>Performance Graph</h2>
+        <canvas id="performance-chart"></canvas> <!-- Canvas for chart -->
+    </div>
+
+    <script>
+        // Function to toggle the Evaluation calendar
+        function showEvaluation() {
+            // Hide other content
+            document.getElementById('user-management-content').style.display = 'none';
+
+            // Toggle evaluation content visibility
+            var evalContentDiv = document.getElementById('evaluation-content');
+            if (evalContentDiv.style.display === 'none') {
+                evalContentDiv.style.display = 'block';
+            } else {
+                evalContentDiv.style.display = 'none';
+            }
+        }
+
+        // Function to show/hide the user management content
+        function showUserManagement() {
+            var userContentDiv = document.getElementById('user-management-content');
+            if (userContentDiv.style.display === 'none') {
+                userContentDiv.style.display = 'block';
+            } else {
+                userContentDiv.style.display = 'none';
+            }
+        }
+
+        // Function to handle tab switching
+        function showTab(tabId, button) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            button.classList.add('active');
+        }
+
+        // Function to toggle the Reports content with a performance graph
+        function showReports() {
+            document.getElementById('user-management-content').style.display = 'none';
+            document.getElementById('evaluation-content').style.display = 'none';
+
+            var reportsContentDiv = document.getElementById('reports-content');
+            if (reportsContentDiv.style.display === 'none') {
+                reportsContentDiv.style.display = 'block';
+                renderPerformanceChart();  // Render the performance chart
+            } else {
+                reportsContentDiv.style.display = 'none';
+            }
+        }
+
+        // Function to render the performance graph
+        function renderPerformanceChart() {
+            var ctx = document.getElementById('performance-chart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',  // Type of chart
+                data: {
+                    labels: ['Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],  // Months
+                    datasets: [{
+                        label: 'Performance',
+                        data: [65, 59, 80, 81, 56, 55],  // Sample data points
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                }
+            });
+        }
+
+        // Function to show the Facebook posts on the Home page
+        function showHome() {
+            // Hide other content
+            document.getElementById('user-management-content').style.display = 'none';
+            document.getElementById('evaluation-content').style.display = 'none';
+            document.getElementById('reports-content').style.display = 'none';
+
+            var homeContentDiv = document.getElementById('home-content');
+            if (homeContentDiv.style.display === 'none') {
+                homeContentDiv.style.display = 'block';
+            } else {
+                homeContentDiv.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
