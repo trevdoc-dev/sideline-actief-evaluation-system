@@ -25,6 +25,7 @@ urlpatterns = [
     path("login/", views.login_page, name="login"),
     path("edit/<int:pk>/update", views.edit_page, name="edit_page"),
     path("user_page/", views.user_page, name="user_page"),
+    path("evaluation/", views.evaluation_page, name="evaluation_page"),
 
     # CRUD operations ...
     path("questions/", views.question_list, name="question_list"),

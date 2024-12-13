@@ -17,6 +17,11 @@ def main_page(request):
 def user_page(request):
     users = User.objects.all()
     return render(request, "user_page.html", {"users": users})
+    
+# EVALUATION PAGE
+def evaluation_page(request):
+    evaluation = Question.objects.all()
+    return render(request, "evaluation_page.html", {"evaluation": evaluation})
 
 
 
