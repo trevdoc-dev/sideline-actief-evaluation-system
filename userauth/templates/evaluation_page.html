@@ -11,7 +11,7 @@
             Please provide your feedback about the teacher's
             performance.
         </p>
-        <form method="post">
+        <form method="post" action="javascript:void(0);" onsubmit="showCongratulationsModal()">
             {% csrf_token %}
 
             <!-- Teacher Selection -->
@@ -42,14 +42,14 @@
             </div>
 
             <!-- Question Cards -->
+            {% for eval in evaluations %}
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">
-                        1. Communication Skills
+                        {{ eval.title }}
                     </h5>
                     <p class="card-text text-muted">
-                        Rate the teacher's ability to communicate
-                        effectively.
+                        {{ eval.content }}
                     </p>
                     <div class="d-flex justify-content-between">
                         {% for i in "12345" %}
@@ -71,61 +71,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">2. Subject Knowledge</h5>
-                    <p class="card-text text-muted">
-                        Rate the teacher's knowledge of the subject.
-                    </p>
-                    <div class="d-flex justify-content-between">
-                        {% for i in "12345" %}
-                        <div>
-                            <input
-                                type="radio"
-                                id="knowledge_{{ i }}"
-                                name="knowledge"
-                                value="{{ i }}"
-                                required
-                            />
-                            <label
-                                for="knowledge_{{ i }}"
-                                class="ms-2"
-                                >{{ i }}</label
-                            >
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">3. Approachability</h5>
-                    <p class="card-text text-muted">
-                        Rate the teacher's approachability and
-                        helpfulness.
-                    </p>
-                    <div class="d-flex justify-content-between">
-                        {% for i in "12345" %}
-                        <div>
-                            <input
-                                type="radio"
-                                id="approachability_{{ i }}"
-                                name="approachability"
-                                value="{{ i }}"
-                                required
-                            />
-                            <label
-                                for="approachability_{{ i }}"
-                                class="ms-2"
-                                >{{ i }}</label
-                            >
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
 
             <!-- Additional Feedback -->
             <div class="card mb-4 shadow-sm">
@@ -153,5 +99,33 @@
         </form>
     </div>
 </div>
+
+<!-- Congratulations Modal -->
+<div class="modal fade" id="congratulationsModal" tabindex="-1" aria-labelledby="congratulationsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="congratulationsModalLabel">Congratulations!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Thank you for completing the evaluation!</p>
+                <div class="py-3">
+                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDR3ajd5NG9laDMxNjkxMmh4ZWQyNzM5NGg0dWc3aWx4ZG8wZ2ZrciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JEA4L51xsnnGs09Eee/giphy.webp" alt="Fireworks" style="width: 100%; max-width: 300px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showCongratulationsModal() {
+        const modal = new bootstrap.Modal(document.getElementById('congratulationsModal'));
+        modal.show();
+    }
+</script>
 
 {% endblock %}
