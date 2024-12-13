@@ -13,10 +13,12 @@ def main_page(request):
     return render(request, "main_page.html")
 
     
-# HOME PAGE
-def home_page(request):
+# USERS PAGE
+def user_page(request):
     users = User.objects.all()
-    return render(request, 'home_page.html', {'users': users})
+    return render(request, "user_page.html", {"users": users})
+
+
 
 # LOGIN PAGE
 def login_page(request):
@@ -36,18 +38,19 @@ def login_page(request):
 
 # EDIT PROFILE
 @login_required
-def edit_page(request):
-    user = request.user  # Get the currently logged-in user
+def edit_page(request, pk):
+    user = get_object_or_404(User, pk=pk)  # Fetch user by ID
 
     if request.method == "POST":
-        # Update user details
-        user.first_name = request.POST["first_name"]
-        user.last_name = request.POST["last_name"]
-        user.email = request.POST["email"]
+        # Update user details from POST data
+        user.first_name = request.POST.get("first_name", user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.email = request.POST.get("email", user.email)
         user.save()
-        return render(request, "edit_page.html", {"success": True})
+        return render(request, "edit_page.html", {"user": user, "success": True})
 
     return render(request, "edit_page.html", {"user": user})
+
 
 
 

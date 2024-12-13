@@ -23,8 +23,8 @@ urlpatterns = [
     path("", views.main_page, name="main_page"),
     path("admin/", admin.site.urls),
     path("login/", views.login_page, name="login"),
-    path('home/', views.home_page, name='home'),
-    path("edit/", views.edit_page, name="edit"),
+    path("edit/<int:pk>/update", views.edit_page, name="edit_page"),
+    path("user_page/", views.user_page, name="user_page"),
 
     # CRUD operations ...
     path("questions/", views.question_list, name="question_list"),
