@@ -9,7 +9,7 @@ END //
 -- Get all users
 CREATE PROCEDURE GetAllUsers()
 BEGIN
-    SELECT * FROM userauth_users;
+    SELECT * FROM userauth_user;
 END //
 
 -- Create new question
