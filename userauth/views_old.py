@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from userauth.models import User
 from userauth.models import Question
 from userauth.forms import QuestionForm
-from django.db import connection
 
 
 # MAIN PAGE
@@ -16,31 +15,13 @@ def main_page(request):
     
 # USERS PAGE
 def user_page(request):
-    users = []
-    with connection.cursor() as cursor:
-        cursor.callproc("GetAllUsers")
-        for result in cursor.fetchall():
-            users.append({
-                "id": result[0],
-                "first_name": result[5],
-                "last_name": result[6],
-                "email": result[7],
-            })
+    users = User.objects.all()
     return render(request, "user_page.html", {"users": users})
     
 # EVALUATION PAGE
 def evaluation_page(request):
-    users = []
-    with connection.cursor() as cursor:
-        cursor.callproc("GetAllUsers")
-        for result in cursor.fetchall():
-            users.append({
-                "id": result[0],
-                "first_name": result[5],
-                "last_name": result[6],
-                "email": result[7],
-            })
     evaluations = Question.objects.all()
+    users = User.objects.all()
     return render(request, "evaluation_page.html", {"evaluations": evaluations, "users": users})
 
 # ANALYTICS PAGE
@@ -67,8 +48,8 @@ def login_page(request):
 
 # EDIT PROFILE
 @login_required
-def edit_page(request, _id):
-    user = get_object_or_404(User, id=_id)
+def edit_page(request, pk):
+    user = get_object_or_404(User, pk=pk)  # Fetch user by ID
 
     if request.method == "POST":
         # Update user details from POST data
@@ -106,43 +87,25 @@ def create_question(request):
 
 # RETRIEVE
 def question_list(request):
-    questions = []
-    with connection.cursor() as cursor:
-        cursor.callproc("GetAllQuestions")
-        for result in cursor.fetchall():
-            questions.append({
-                "id": result[0],
-                "title": result[1],
-                "content": result[2],
-            })
-
+    questions = Question.objects.all()
     return render(request, "questions/question_list.html", {"questions": questions})
 
 # UPDATE
-def update_question(request, _id):
-    post = get_object_or_404(Question, id=_id)
-    
+def update_question(request, pk):
+    post = get_object_or_404(Question, pk=pk)
     if request.method == "POST":
         form = QuestionForm(request.POST, instance=post)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
-
-            with connection.cursor() as cursor:
-                cursor.callproc("UpdateQuestion", [_id, title, content])
-            
+            form.save()
             return redirect("question_list")
     else:
         form = QuestionForm(instance=post)
-    
     return render(request, "questions/update_question.html", {"form": form, "post": post})
 
 # DELETE
-def delete_question(request, _id):
+def delete_question(request, pk):
+    post = get_object_or_404(Question, pk=pk)
     if request.method == "POST":
-        with connection.cursor() as cursor:
-            cursor.callproc("DeleteQuestion", [_id])
-
+        post.delete()
         return redirect("question_list")
-
-    return render(request, "questions/delete_question.html", {"_id": _id})
+    return render(request, "questions/delete_question.html", {"post": post})
